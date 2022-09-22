@@ -10,7 +10,6 @@ import android.util.Log
 import androidx.core.app.ActivityCompat
 
 class BleDeviceFinder(private val context: Context) {
-    private val DEBUG: Boolean = BuildConfig.DEBUG
     private val btManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
     private val btAdapter = btManager.adapter
     private val bleScanner = btAdapter.bluetoothLeScanner
@@ -21,7 +20,7 @@ class BleDeviceFinder(private val context: Context) {
     /**
      * Scans for Bluetooth LE devices and stops the scan after [SCAN_PERIOD] seconds
      */
-    private fun scanBleDevice() {
+    fun scanBleDevice() {
         // checks bluetooth permission
         if (ActivityCompat.checkSelfPermission(
                 context,
@@ -30,6 +29,7 @@ class BleDeviceFinder(private val context: Context) {
             if (DEBUG) Log.w(TAG, "scanBleDevice - bluetooth permission not granted")
             return
         }
+        // scans for bluetooth LE devices
         if (scanning) {
             if (DEBUG) Log.d(TAG, "scanBleDevice - scan stop")
             scanning = false
@@ -39,7 +39,7 @@ class BleDeviceFinder(private val context: Context) {
             handler.postDelayed({
                 scanning = false
                 bleScanner.stopScan(bleScanCallback)
-            }, Companion.SCAN_PERIOD)
+            }, SCAN_PERIOD)
             // starts scanning
             if (DEBUG) Log.d(TAG, "scanBleDevice - scan start")
             scanning = true
@@ -48,6 +48,7 @@ class BleDeviceFinder(private val context: Context) {
     }
 
     companion object {
+        private val DEBUG: Boolean = BuildConfig.DEBUG
         private const val TAG = "BleDeviceFinder"
 
         /**

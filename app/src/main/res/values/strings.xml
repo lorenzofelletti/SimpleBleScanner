@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">SimpleBleScanner</string>
     <string name="btn_start_scan_text">Start Scan</string>
+    <string name="tw_scan_results_title">Scan Results</string>
 </resources>

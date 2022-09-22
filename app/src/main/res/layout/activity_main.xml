@@ -11,6 +11,31 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/btn_start_scan_text"
-        tools:layout_editor_absoluteX="141dp"
-        tools:layout_editor_absoluteY="578dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.844" />
+
+    <TextView
+        android:id="@+id/twScanResultsLabel"
+        android:layout_width="163dp"
+        android:layout_height="19dp"
+        android:layout_marginTop="28dp"
+        android:clickable="false"
+        android:gravity="center"
+        android:text="@string/tw_scan_results_title"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="375dp"
+        android:layout_height="516dp"
+        app:layout_constraintBottom_toTopOf="@+id/btnStartScan"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/twScanResultsLabel" />
 </androidx.constraintlayout.widget.ConstraintLayout>
