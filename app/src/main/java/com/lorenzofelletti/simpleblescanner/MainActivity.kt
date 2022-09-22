@@ -6,14 +6,15 @@ import android.widget.Button
 import android.util.Log
 
 class MainActivity : AppCompatActivity() {
+    private val DEBUG: Boolean = BuildConfig.DEBUG
     private lateinit var btnStartScan: Button
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        
+
         btnStartScan = findViewById(R.id.btnStartScan)
         btnStartScan.setOnClickListener {
-            Log.i(TAG, "btnStartScan - onClick event")
+            if (DEBUG) Log.i(TAG, "btnStartScan - onClick event")
         }
     }
 

@@ -10,6 +10,7 @@ import android.util.Log
 import androidx.core.app.ActivityCompat
 
 class BleDeviceFinder(private val context: Context) {
+    private val DEBUG: Boolean = BuildConfig.DEBUG
     private val btManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
     private val btAdapter = btManager.adapter
     private val bleScanner = btAdapter.bluetoothLeScanner
@@ -26,11 +27,11 @@ class BleDeviceFinder(private val context: Context) {
                 context,
                 Manifest.permission.BLUETOOTH_SCAN
         ) != PackageManager.PERMISSION_GRANTED) {
-            Log.w(TAG, "scanBleDevice - bluetooth permission not granted")
+            if (DEBUG) Log.w(TAG, "scanBleDevice - bluetooth permission not granted")
             return
         }
         if (scanning) {
-            Log.i(TAG, "scanBleDevice - scan stop")
+            if (DEBUG) Log.d(TAG, "scanBleDevice - scan stop")
             scanning = false
             bleScanner.stopScan(bleScanCallback)
         } else {
@@ -40,7 +41,7 @@ class BleDeviceFinder(private val context: Context) {
                 bleScanner.stopScan(bleScanCallback)
             }, Companion.SCAN_PERIOD)
             // starts scanning
-            Log.i(TAG, "scanBleDevice - scan start")
+            if (DEBUG) Log.d(TAG, "scanBleDevice - scan start")
             scanning = true
             bleScanner.startScan(bleScanCallback)
         }
