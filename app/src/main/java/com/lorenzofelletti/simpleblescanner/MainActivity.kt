@@ -26,19 +26,18 @@ class MainActivity : AppCompatActivity() {
         bleScanManager = BleScanManager(btManager)
         bleRequiredPermissionsAndRequestCodesMap = bleScanManager.getBleRequiredPermissionsAndRequestCodesMap()
 
+        bleScanManager.addBeforeScanAction { btnStartScan.isEnabled = false }
+        bleScanManager.addAfterScanAction { btnStartScan.isEnabled = true }
+
         btnStartScan = findViewById(R.id.btnStartScan)
         btnStartScan.setOnClickListener {
-            if (DEBUG) Log.i(TAG, "${it.javaClass.simpleName} - onClick event")
+            if (DEBUG) Log.i(TAG, "${it.javaClass.simpleName}:${it.id} - onClick event")
 
             // checks that all required permissions are granted
             checkAllRequiredPermissions()
 
             // starts BLE scanning if permission was already granted˙
             startBleDeviceScanning()
-
-            // disable the button until scanning ends
-            // maybe this is not the best place to put it
-            btnStartScan.isEnabled = false
         }
     }
 

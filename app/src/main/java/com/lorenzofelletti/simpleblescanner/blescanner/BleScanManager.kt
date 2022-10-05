@@ -21,6 +21,22 @@ class BleScanManager() {
     private var toExecuteBeforeScan: MutableList<() -> Unit> = mutableListOf()
     private var toExecuteAfterScan: MutableList<() -> Unit> = mutableListOf()
 
+    fun addBeforeScanAction(action: () -> Unit) {
+        toExecuteBeforeScan.add(action)
+    }
+
+    fun removeBeforeScanAction(action: () -> Unit) {
+        toExecuteBeforeScan.remove(action)
+    }
+
+    fun addAfterScanAction(action: () -> Unit) {
+        toExecuteAfterScan.add(action)
+    }
+
+    fun removeAfterScanAction(action: () -> Unit) {
+        toExecuteAfterScan.remove(action)
+    }
+
     /** The maximum scanning period. Default is [DEFAULT_SCAN_PERIOD]. */
     private var scanPeriod: Long = DEFAULT_SCAN_PERIOD
 
