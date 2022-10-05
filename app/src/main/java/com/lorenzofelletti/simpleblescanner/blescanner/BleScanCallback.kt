@@ -22,7 +22,7 @@ class BleScanCallback : ScanCallback() {
     }
 
     companion object {
-        private val TAG = Companion::class.java.simpleName
+        private val TAG = BleScanCallback::class.java.simpleName
         private val DEBUG = BuildConfig.DEBUG
     }
 }

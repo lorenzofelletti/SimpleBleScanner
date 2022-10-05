@@ -140,7 +140,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
-        private var TAG = Companion::class.java.simpleName
+        private var TAG = MainActivity::class.java.simpleName
         private val DEBUG: Boolean = BuildConfig.DEBUG
     }
 }
