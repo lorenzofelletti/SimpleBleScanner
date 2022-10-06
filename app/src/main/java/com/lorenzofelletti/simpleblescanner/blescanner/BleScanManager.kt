@@ -1,9 +1,7 @@
 package com.lorenzofelletti.simpleblescanner.blescanner
 
 import android.annotation.SuppressLint
-import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
-import android.bluetooth.le.BluetoothLeScanner
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
@@ -14,48 +12,21 @@ import com.lorenzofelletti.simpleblescanner.BuildConfig
 /**
  * A manager for bluetooth LE scanning..
  */
-class BleScanManager() {
-    private lateinit var btManager: BluetoothManager
-    private lateinit var btAdapter: BluetoothAdapter
-    private lateinit var bleScanner: BluetoothLeScanner
-    private var toExecuteBeforeScan: MutableList<() -> Unit> = mutableListOf()
-    private var toExecuteAfterScan: MutableList<() -> Unit> = mutableListOf()
+class BleScanManager(
+    btManager: BluetoothManager,
+    private val scanPeriod: Long = DEFAULT_SCAN_PERIOD,
+    private val scanCallback: BleScanCallback = BleScanCallback()
+) {
+    private val btAdapter = btManager.adapter
+    private val bleScanner = btAdapter.bluetoothLeScanner
 
-    fun addBeforeScanAction(action: () -> Unit) {
-        toExecuteBeforeScan.add(action)
-    }
-
-    fun removeBeforeScanAction(action: () -> Unit) {
-        toExecuteBeforeScan.remove(action)
-    }
-
-    fun addAfterScanAction(action: () -> Unit) {
-        toExecuteAfterScan.add(action)
-    }
-
-    fun removeAfterScanAction(action: () -> Unit) {
-        toExecuteAfterScan.remove(action)
-    }
-
-    /** The maximum scanning period. Default is [DEFAULT_SCAN_PERIOD]. */
-    private var scanPeriod: Long = DEFAULT_SCAN_PERIOD
+    var toExecuteBeforeScan: MutableList<() -> Unit> = mutableListOf()
+    var toExecuteAfterScan: MutableList<() -> Unit> = mutableListOf()
 
     /** True when the manager is performing the scan */
     private var scanning = false
 
     private val handler = Handler(Looper.getMainLooper())
-    private val bleScanCallback = BleScanCallback()
-
-    constructor(btManager: BluetoothManager) : this() {
-        this.btManager = btManager
-        this.btAdapter = btManager.adapter
-        this.bleScanner = btAdapter.bluetoothLeScanner
-    }
-
-    constructor(btManager: BluetoothManager, scanPeriod: Long) : this() {
-        BleScanManager(btManager)
-        this.scanPeriod = scanPeriod
-    }
 
     /**
      * Scans for Bluetooth LE devices and stops the scan after [scanPeriod] seconds.
@@ -66,7 +37,7 @@ class BleScanManager() {
         fun stopScan() {
             if (DEBUG) Log.d(TAG, "${::scanBleDevice.name} - scan stop")
             scanning = false
-            bleScanner.stopScan(bleScanCallback)
+            bleScanner.stopScan(scanCallback)
 
             // execute all the functions to execute after scanning
             executeAfterScan()
@@ -84,7 +55,7 @@ class BleScanManager() {
             // starts scanning
             if (DEBUG) Log.d(TAG, "${::scanBleDevice.name} - scan start")
             scanning = true
-            bleScanner.startScan(bleScanCallback)
+            bleScanner.startScan(scanCallback)
         }
     }
 
