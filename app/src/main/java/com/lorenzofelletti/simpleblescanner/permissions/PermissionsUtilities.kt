@@ -26,7 +26,6 @@ object PermissionsUtilities {
      */
     private fun checkPermission(activity: Activity, permission: String, requestCode: Int) {
         val name = object {}.javaClass.enclosingMethod?.name // get method name for debug
-        if (DEBUG) Log.d(TAG, "$name - called")
 
         if (ActivityCompat.checkSelfPermission(
                 activity.baseContext, permission
