@@ -1,4 +1,4 @@
-package com.lorenzofelletti.simpleblescanner.blescanner
+package com.lorenzofelletti.simpleblescanner.blescanner.model
 
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult

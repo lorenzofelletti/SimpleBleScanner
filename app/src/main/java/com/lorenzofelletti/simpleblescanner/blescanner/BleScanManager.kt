@@ -2,12 +2,11 @@ package com.lorenzofelletti.simpleblescanner.blescanner
 
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothManager
-import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import androidx.annotation.RequiresApi
 import com.lorenzofelletti.simpleblescanner.BuildConfig
+import com.lorenzofelletti.simpleblescanner.blescanner.model.BleScanCallback
 
 /**
  * A manager for bluetooth LE scanning..
@@ -20,8 +19,8 @@ class BleScanManager(
     private val btAdapter = btManager.adapter
     private val bleScanner = btAdapter.bluetoothLeScanner
 
-    var toExecuteBeforeScan: MutableList<() -> Unit> = mutableListOf()
-    var toExecuteAfterScan: MutableList<() -> Unit> = mutableListOf()
+    var beforeScanActions: MutableList<() -> Unit> = mutableListOf()
+    var afterScanActions: MutableList<() -> Unit> = mutableListOf()
 
     /** True when the manager is performing the scan */
     private var scanning = false
@@ -60,29 +59,27 @@ class BleScanManager(
     }
 
     private fun executeBeforeScan() {
-        BleScanManagerUtilities.executeListOfFunctions(toExecuteBeforeScan)
+        executeListOfFunctions(beforeScanActions)
     }
 
     private fun executeAfterScan() {
-        BleScanManagerUtilities.executeListOfFunctions(toExecuteAfterScan)
-    }
-
-    /**
-     * @return a Map mapping each permission required to use BLE to a request code
-     */
-    @RequiresApi(Build.VERSION_CODES.S)
-    fun getBleRequiredPermissionsAndRequestCodesMap(): Map<String, Int> {
-        return BleScanManagerUtilities.bleRequiredPermissionsAndRequestCodesMap
+        executeListOfFunctions(afterScanActions)
     }
 
     companion object {
-        private var TAG = BleScanManager::class.java.simpleName
-        private val DEBUG: Boolean = BuildConfig.DEBUG
-
         /**
          * Constant holding the default max scan period time, i.e. the max number of millis
          * scanning will be performed.
          */
         const val DEFAULT_SCAN_PERIOD: Long = 10000
+        private var TAG = BleScanManager::class.java.simpleName
+        private val DEBUG: Boolean = BuildConfig.DEBUG
+
+        /** Execute a [List] of functions taking no arguments and returning [Unit]. */
+        fun executeListOfFunctions(toExecute: List<() -> Unit>) {
+            toExecute.forEach {
+                it()
+            }
+        }
     }
 }
