@@ -8,6 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.lorenzofelletti.simpleblescanner.R
 import com.lorenzofelletti.simpleblescanner.blescanner.model.BleDevice
 
+/**
+ * Adapter for the RecyclerView that shows the found BLE devices.
+ */
 class BleDeviceAdapter(private val devices: List<BleDevice>) : RecyclerView.Adapter<BleDeviceAdapter.ViewHolder>() {
 
     // Provide a direct reference to each of the views within a data item

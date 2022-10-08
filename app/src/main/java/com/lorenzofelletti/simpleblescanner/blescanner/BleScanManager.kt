@@ -32,14 +32,14 @@ class BleScanManager(
      * Does not checks the required permissions are granted, check must be done beforehand.
      */
     @SuppressLint("MissingPermission")
-    fun scanBleDevice() {
+    fun scanBleDevices() {
         fun stopScan() {
-            if (DEBUG) Log.d(TAG, "${::scanBleDevice.name} - scan stop")
+            if (DEBUG) Log.d(TAG, "${::scanBleDevices.name} - scan stop")
             scanning = false
             bleScanner.stopScan(scanCallback)
 
             // execute all the functions to execute after scanning
-            executeAfterScan()
+            executeAfterScanActions()
         }
 
         // scans for bluetooth LE devices
@@ -49,20 +49,20 @@ class BleScanManager(
             // stops scanning after scanPeriod millis
             handler.postDelayed({ stopScan() }, scanPeriod)
             // execute all the functions to execute before scanning
-            executeBeforeScan()
+            executeBeforeScanActions()
 
             // starts scanning
-            if (DEBUG) Log.d(TAG, "${::scanBleDevice.name} - scan start")
+            if (DEBUG) Log.d(TAG, "${::scanBleDevices.name} - scan start")
             scanning = true
             bleScanner.startScan(scanCallback)
         }
     }
 
-    private fun executeBeforeScan() {
+    private fun executeBeforeScanActions() {
         executeListOfFunctions(beforeScanActions)
     }
 
-    private fun executeAfterScan() {
+    private fun executeAfterScanActions() {
         executeListOfFunctions(afterScanActions)
     }
 
@@ -75,8 +75,12 @@ class BleScanManager(
         private var TAG = BleScanManager::class.java.simpleName
         private val DEBUG: Boolean = BuildConfig.DEBUG
 
-        /** Execute a [List] of functions taking no arguments and returning [Unit]. */
-        fun executeListOfFunctions(toExecute: List<() -> Unit>) {
+        /**
+         * Function that executes a list of functions taking no arguments and returning [Unit].
+         *
+         * @param toExecute The list of functions to execute
+         */
+        private fun executeListOfFunctions(toExecute: List<() -> Unit>) {
             toExecute.forEach {
                 it()
             }

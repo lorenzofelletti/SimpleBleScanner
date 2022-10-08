@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var foundDevices: MutableList<BleDevice>
 
-    @SuppressLint("NotifyDataSetChanged")
+    @SuppressLint("NotifyDataSetChanged", "MissingPermission")
     @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity() {
             }
         }))
 
-        // adding the actions the manager must do before and after scanning
+        // Adding the actions the manager must do before and after scanning
         bleScanManager.beforeScanActions.add { btnStartScan.isEnabled = false }
         bleScanManager.beforeScanActions.add {
             foundDevices.clear()
@@ -67,24 +67,28 @@ class MainActivity : AppCompatActivity() {
         }
         bleScanManager.afterScanActions.add { btnStartScan.isEnabled = true }
 
-        // adding the onclick listener to the start scan btn
+        // Adding the onclick listener to the start scan button
         btnStartScan = findViewById(R.id.btn_start_scan)
         btnStartScan.setOnClickListener {
             if (DEBUG) Log.i(TAG, "${it.javaClass.simpleName}:${it.id} - onClick event")
 
-            // checks that all required permissions are granted
-            PermissionsUtilities.checkRequiredPermissions(
-                this, BleScanRequiredPermissions.permissionsMap
-            )
-
-            // starts BLE scanning if permission was already granted˙
-            startBleDeviceScanning()
+            // Checks if the required permissions are granted and starts the scan if so, otherwise it requests them
+            when (PermissionsUtilities.checkPermissionsGranted(
+                this,
+                BleScanRequiredPermissions.permissions
+            )) {
+                true -> bleScanManager.scanBleDevices()
+                false -> PermissionsUtilities.checkPermissions(
+                    this, BleScanRequiredPermissions.permissions, BLE_PERMISSION_REQUEST_CODE
+                )
+            }
         }
     }
 
     /**
      * Function that checks whether the permission was granted or not
      */
+    @RequiresApi(Build.VERSION_CODES.S)
     override fun onRequestPermissionsResult(
         requestCode: Int, permissions: Array<out String>, grantResults: IntArray
     ) {
@@ -93,49 +97,25 @@ class MainActivity : AppCompatActivity() {
             true -> {
                 if (DEBUG) {
                     Log.d(
-                        TAG,
-                        "${::onRequestPermissionsResult.name} - $permissions granted!"
+                        TAG, "${::onRequestPermissionsResult.name} - $permissions granted!"
                     )
                 }
+
+                bleScanManager.scanBleDevices()
             }
             false -> {
-                // TODO: what to do if some permissions were not granted
                 if (DEBUG) {
                     Log.d(
                         TAG,
                         "${::onRequestPermissionsResult.name} - some permissions in $permissions were not granted"
                     )
                 }
-            }
-        }
-    }
 
-    @RequiresApi(Build.VERSION_CODES.S)
-    private fun startBleDeviceScanning() {
-        when (PermissionsUtilities.checkRequiredPermissionsGranted(
-            this.baseContext, BleScanRequiredPermissions.permissionsMap.keys
-        )) {
-            true -> {
-                if (DEBUG) Log.d(
-                    TAG,
-                    "${::startBleDeviceScanning.name} - permissions granted, scanning can start"
-                )
-
-                // starts scan
-                bleScanManager.scanBleDevice()
-            }
-            false -> {
-                if (DEBUG) Log.d(
-                    TAG,
-                    "${::startBleDeviceScanning.name} - permissions not granted, cannot start scan"
-                )
-                // scanning not possible because of permissions
                 Toast.makeText(
-                    baseContext,
-                    "Scanning not possible - required permissions not granted",
-                    Toast.LENGTH_SHORT
+                    this,
+                    "Some permissions were not granted, please grant them and try again",
+                    Toast.LENGTH_LONG
                 ).show()
-                btnStartScan.isEnabled = false
             }
         }
     }
@@ -143,5 +123,6 @@ class MainActivity : AppCompatActivity() {
     companion object {
         private var TAG = MainActivity::class.java.simpleName
         private val DEBUG: Boolean = BuildConfig.DEBUG
+        private const val BLE_PERMISSION_REQUEST_CODE = 1
     }
 }

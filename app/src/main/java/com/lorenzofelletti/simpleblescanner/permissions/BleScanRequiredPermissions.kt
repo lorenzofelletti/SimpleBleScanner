@@ -4,18 +4,17 @@ import android.Manifest
 import android.os.Build
 import androidx.annotation.RequiresApi
 
+/**
+ * An object containing the required permissions for scanning bluetooth LE devices.
+ */
 object BleScanRequiredPermissions {
-    private const val BLUETOOTH_SCAN_REQUEST_CODE = 100
-    private const val ACCESS_COARSE_LOCATION_REQUEST_CODE = 101
-    private const val ACCESS_FINE_LOCATION_REQUEST_CODE = 102
-    private const val BLUETOOTH_ADMIN_REQUEST_CODE = 103
 
-    /** Maps each permission required for using BLE to a request code. */
+    /** Array of required permissions for BLE scanning. */
     @RequiresApi(Build.VERSION_CODES.S)
-    val permissionsMap = mapOf(
-        Manifest.permission.BLUETOOTH_SCAN to BLUETOOTH_SCAN_REQUEST_CODE,
-        Manifest.permission.ACCESS_COARSE_LOCATION to ACCESS_COARSE_LOCATION_REQUEST_CODE,
-        Manifest.permission.ACCESS_FINE_LOCATION to ACCESS_FINE_LOCATION_REQUEST_CODE,
-        Manifest.permission.BLUETOOTH_ADMIN to BLUETOOTH_ADMIN_REQUEST_CODE,
+    val permissions = arrayOf(
+        Manifest.permission.BLUETOOTH_SCAN,
+        Manifest.permission.ACCESS_COARSE_LOCATION,
+        Manifest.permission.ACCESS_FINE_LOCATION,
+        Manifest.permission.BLUETOOTH_ADMIN,
     )
 }
