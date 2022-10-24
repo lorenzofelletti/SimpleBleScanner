@@ -18,6 +18,7 @@ import com.lorenzofelletti.simpleblescanner.blescanner.adapter.BleDeviceAdapter
 import com.lorenzofelletti.simpleblescanner.blescanner.model.BleDevice
 import com.lorenzofelletti.simpleblescanner.permissions.BleScanRequiredPermissions
 import com.lorenzofelletti.simpleblescanner.permissions.PermissionsUtilities
+import com.lorenzofelletti.simpleblescanner.permissions.PermissionsUtilities.dispatchOnRequestPermissionsResult
 
 class MainActivity : AppCompatActivity() {
     private lateinit var btnStartScan: Button
@@ -93,31 +94,21 @@ class MainActivity : AppCompatActivity() {
         requestCode: Int, permissions: Array<out String>, grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when (PermissionsUtilities.checkRequestedPermissionsResults(permissions, grantResults)) {
-            true -> {
-                if (DEBUG) {
-                    Log.d(
-                        TAG, "${::onRequestPermissionsResult.name} - $permissions granted!"
-                    )
-                }
 
+        dispatchOnRequestPermissionsResult(
+            requestCode,
+            grantResults,
+            onGrantedMap = mapOf(BLE_PERMISSION_REQUEST_CODE to {
                 bleScanManager.scanBleDevices()
-            }
-            false -> {
-                if (DEBUG) {
-                    Log.d(
-                        TAG,
-                        "${::onRequestPermissionsResult.name} - some permissions in $permissions were not granted"
-                    )
-                }
-
+            }),
+            onDeniedMap = mapOf(BLE_PERMISSION_REQUEST_CODE to {
                 Toast.makeText(
                     this,
                     "Some permissions were not granted, please grant them and try again",
                     Toast.LENGTH_LONG
                 ).show()
-            }
-        }
+            })
+        )
     }
 
     companion object {
