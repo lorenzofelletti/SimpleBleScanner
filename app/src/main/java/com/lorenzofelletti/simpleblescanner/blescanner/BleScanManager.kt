@@ -6,6 +6,7 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import com.lorenzofelletti.simpleblescanner.BuildConfig
+import com.lorenzofelletti.simpleblescanner.BuildConfig.DEBUG
 import com.lorenzofelletti.simpleblescanner.blescanner.model.BleScanCallback
 
 /**
@@ -67,13 +68,13 @@ class BleScanManager(
     }
 
     companion object {
+        private val TAG = BleScanManager::class.java.simpleName
+
         /**
          * Constant holding the default max scan period time, i.e. the max number of millis
          * scanning will be performed.
          */
         const val DEFAULT_SCAN_PERIOD: Long = 10000
-        private var TAG = BleScanManager::class.java.simpleName
-        private val DEBUG: Boolean = BuildConfig.DEBUG
 
         /**
          * Function that executes a list of functions taking no arguments and returning [Unit].

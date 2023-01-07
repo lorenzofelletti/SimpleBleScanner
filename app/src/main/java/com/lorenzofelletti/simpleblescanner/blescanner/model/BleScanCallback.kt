@@ -4,6 +4,7 @@ import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
 import android.util.Log
 import com.lorenzofelletti.simpleblescanner.BuildConfig
+import com.lorenzofelletti.simpleblescanner.BuildConfig.DEBUG
 
 class BleScanCallback(
     private val onScanResultAction: (ScanResult?) -> Unit = {},
@@ -30,6 +31,5 @@ class BleScanCallback(
 
     companion object {
         private val TAG = BleScanCallback::class.java.simpleName
-        private val DEBUG = BuildConfig.DEBUG
     }
 }

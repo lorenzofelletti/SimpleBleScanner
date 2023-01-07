@@ -2,4 +2,6 @@
     <string name="app_name">SimpleBleScanner</string>
     <string name="btn_start_scan_text">Start Scan</string>
     <string name="tw_scan_results_title">Scan Results</string>
+    <string name="ble_permission_rationale">This app needs to access bluetooth and location in order to scan for BLE devices.</string>
+    <string name="ble_permissions_denied_message">Some permissions were not granted, please grant them and try again</string>
 </resources>

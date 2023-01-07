@@ -12,11 +12,8 @@ import com.lorenzofelletti.simpleblescanner.blescanner.model.BleDevice
  * Adapter for the RecyclerView that shows the found BLE devices.
  */
 class BleDeviceAdapter(private val devices: List<BleDevice>) : RecyclerView.Adapter<BleDeviceAdapter.ViewHolder>() {
-
-    // Provide a direct reference to each of the views within a data item
-    // Used to cache the views within the item layout for fast access
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val deviceNameTextView: TextView = itemView.findViewById<TextView>(R.id.device_name)
+        val deviceNameTextView: TextView = itemView.findViewById(R.id.device_name)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
