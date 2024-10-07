@@ -5,7 +5,6 @@ import android.bluetooth.BluetoothManager
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import com.lorenzofelletti.simpleblescanner.BuildConfig
 import com.lorenzofelletti.simpleblescanner.BuildConfig.DEBUG
 import com.lorenzofelletti.simpleblescanner.blescanner.model.BleScanCallback
 
